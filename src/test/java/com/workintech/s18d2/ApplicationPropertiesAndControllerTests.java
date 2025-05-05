@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -32,8 +33,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 
-@WebMvcTest(value = {ApplicationPropertiesAndControllerTests.class, FruitController.class})
+@WebMvcTest(FruitController.class)
 @ExtendWith(ResultAnalyzer2.class)
+@ContextConfiguration(classes = S18d2Application.class)
 class ApplicationPropertiesAndControllerTests {
 
     @Autowired
