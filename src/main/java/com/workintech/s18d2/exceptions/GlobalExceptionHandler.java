@@ -6,31 +6,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.time.LocalDateTime;
-
 @ControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
-    
     @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handlePlantException(PlantException ex) {
-        log.error("PlantException: " + ex.getMessage());
-        ErrorResponse error = new ErrorResponse(
-                HttpStatus.NOT_FOUND.value(),
-                ex.getMessage(),
-                LocalDateTime.now()
-        );
-        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    public ResponseEntity<ErrorResponse> handleException(PlantException exception) {
+        ErrorResponse errorResponse = new ErrorResponse((exception.getMessage()));
+        return new ResponseEntity<>(errorResponse, exception.getHttpStatus());
     }
-    
+
     @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleException(Exception ex) {
-        log.error("Unexpected exception: " + ex.getMessage());
-        ErrorResponse error = new ErrorResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "An unexpected error occurred",
-                LocalDateTime.now()
-        );
-        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<ErrorResponse> handleGeneralException(Exception exception) {
+        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-} 
+}

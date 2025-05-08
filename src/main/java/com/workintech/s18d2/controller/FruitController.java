@@ -1,85 +1,51 @@
 package com.workintech.s18d2.controller;
 
 import com.workintech.s18d2.entity.Fruit;
-import com.workintech.s18d2.exceptions.SuccessResponse;
 import com.workintech.s18d2.services.FruitService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@Slf4j
+@RequestMapping("/fruit")
+@Validated
 public class FruitController {
-    
-    private final FruitService fruitService;
-    
+    private FruitService fruitService;
+
     @Autowired
     public FruitController(FruitService fruitService) {
         this.fruitService = fruitService;
     }
-    
-    @GetMapping("/fruit")
-    public List<Fruit> getAllFruits() {
+
+    @GetMapping()
+    public List<Fruit> getByAscPrice() {
         return fruitService.getByPriceAsc();
-    }
-    
-    @GetMapping("/fruit/{id}")
-    public Fruit getFruitById(@PathVariable Long id) {
-        return fruitService.getById(id);
-    }
-    
-    @GetMapping("/fruit/desc")
-    public List<Fruit> getAllFruitsDesc() {
-        return fruitService.getByPriceDesc();
-    }
-    
-    @PostMapping("/fruit")
-    public SuccessResponse<Fruit> saveFruit(@RequestBody Fruit fruit) {
-        Fruit savedFruit = fruitService.save(fruit);
-        return new SuccessResponse<>(savedFruit, "Fruit successfully saved");
-    }
-    
-    @GetMapping("/fruit/name/{name}")
-    public List<Fruit> searchFruitsByName(@PathVariable String name) {
-        return fruitService.searchByName(name);
-    }
-    
-    @DeleteMapping("/fruit/{id}")
-    public Fruit deleteFruit(@PathVariable Long id) {
-        return fruitService.delete(id);
     }
 
-    // Also keep the endpoints with prefix as specified in the requirements
-    @GetMapping("/workintech/fruits")
-    public List<Fruit> getAllFruitsWithPrefix() {
-        return fruitService.getByPriceAsc();
-    }
-    
-    @GetMapping("/workintech/fruits/{id}")
-    public Fruit getFruitByIdWithPrefix(@PathVariable Long id) {
-        return fruitService.getById(id);
-    }
-    
-    @GetMapping("/workintech/fruits/desc")
-    public List<Fruit> getAllFruitsDescWithPrefix() {
+    @GetMapping("/desc")
+    public List<Fruit> getByDescPrice() {
         return fruitService.getByPriceDesc();
     }
-    
-    @PostMapping("/workintech/fruits")
-    public SuccessResponse<Fruit> saveFruitWithPrefix(@RequestBody Fruit fruit) {
-        Fruit savedFruit = fruitService.save(fruit);
-        return new SuccessResponse<>(savedFruit, "Fruit successfully saved");
+
+    @GetMapping("/{id}")
+    public Fruit getById(@PathVariable Long id) {
+        return fruitService.getById(id);
     }
-    
-    @GetMapping("/workintech/fruits/name/{name}")
-    public List<Fruit> searchFruitsByNameWithPrefix(@PathVariable String name) {
+
+    @PostMapping()
+    public Fruit save(@RequestBody Fruit fruit) {
+        return fruitService.save(fruit);
+    }
+
+    @GetMapping("/name/{name}")
+    public List<Fruit> save(@PathVariable String name) {
         return fruitService.searchByName(name);
     }
-    
-    @DeleteMapping("/workintech/fruits/{id}")
-    public Fruit deleteFruitWithPrefix(@PathVariable Long id) {
+
+    @DeleteMapping("/{id}")
+    public Fruit delete(@PathVariable Long id) {
         return fruitService.delete(id);
     }
-} 
+}

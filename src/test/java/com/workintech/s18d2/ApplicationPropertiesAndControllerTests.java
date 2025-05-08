@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.workintech.s18d2.controller.FruitController;
 import com.workintech.s18d2.entity.Fruit;
 import com.workintech.s18d2.entity.FruitType;
-import com.workintech.s18d2.services.FruitService;
+import com.workintech.s18d2.services.FruitServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -33,9 +32,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 
-@WebMvcTest(FruitController.class)
+@WebMvcTest(value = {ApplicationPropertiesAndControllerTests.class, FruitController.class})
 @ExtendWith(ResultAnalyzer2.class)
-@ContextConfiguration(classes = S18d2Application.class)
 class ApplicationPropertiesAndControllerTests {
 
     @Autowired
@@ -47,7 +45,7 @@ class ApplicationPropertiesAndControllerTests {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private FruitService fruitService;
+    private FruitServiceImpl fruitService;
 
     private Fruit sampleFruit;
 
@@ -135,5 +133,3 @@ class ApplicationPropertiesAndControllerTests {
                 .andExpect(status().isOk());
     }
 }
-
-

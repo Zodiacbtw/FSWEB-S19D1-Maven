@@ -1,33 +1,22 @@
 package com.workintech.s18d2.services;
 
+import com.workintech.s18d2.exceptions.PlantException;
 import com.workintech.s18d2.repository.VegetableRepository;
 import com.workintech.s18d2.entity.Vegetable;
-import com.workintech.s18d2.exceptions.PlantException;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
-@Slf4j
 public class VegetableServiceImpl implements VegetableService {
-
-    private final VegetableRepository vegetableRepository;
+    private VegetableRepository vegetableRepository;
 
     @Autowired
     public VegetableServiceImpl(VegetableRepository vegetableRepository) {
         this.vegetableRepository = vegetableRepository;
-    }
-
-    @Override
-    public List<Vegetable> getAll() {
-        return vegetableRepository.findAll();
-    }
-
-    @Override
-    public List<Vegetable> getByPriceDesc() {
-        return vegetableRepository.getByPriceDesc();
     }
 
     @Override
@@ -36,24 +25,26 @@ public class VegetableServiceImpl implements VegetableService {
     }
 
     @Override
+    public List<Vegetable> getByPriceDesc() {
+        return vegetableRepository.getByPriceDesc();
+    }
+
+    @Override
+    public List<Vegetable> searchByName(String name) {
+        return vegetableRepository.searchByName(name);
+    }
+
+    @Override
     public Vegetable getById(Long id) {
-        if (id < 0) {
-            log.error("Invalid ID: " + id);
-            throw new PlantException("ID cannot be negative");
+        Optional<Vegetable> vegetableOptional = vegetableRepository.findById(id);
+        if (vegetableOptional.isPresent()) {
+            return vegetableOptional.get();
         }
-        return vegetableRepository.findById(id)
-                .orElseThrow(() -> {
-                    log.error("Vegetable not found with ID: " + id);
-                    return new PlantException("Vegetable not found with ID: " + id);
-                });
+        throw new PlantException("Vegetable could not be found", HttpStatus.NOT_FOUND);
     }
 
     @Override
     public Vegetable save(Vegetable vegetable) {
-        if (vegetable.getName() == null || vegetable.getPrice() == null) {
-            log.error("Incomplete vegetable data");
-            throw new PlantException("All vegetable fields must be filled");
-        }
         return vegetableRepository.save(vegetable);
     }
 
@@ -63,9 +54,4 @@ public class VegetableServiceImpl implements VegetableService {
         vegetableRepository.delete(vegetable);
         return vegetable;
     }
-
-    @Override
-    public List<Vegetable> searchByName(String name) {
-        return vegetableRepository.searchByName(name);
-    }
-} 
+}
